@@ -13,6 +13,7 @@ n_samples = mnist.train.num_examples
 
 def train(network_architecture, learning_rate=0.001, batch_size=100, training_epochs=10, display_step=5):
     vae = VariationalAutoencoder(network_architecture, learning_rate=learning_rate, batch_size=batch_size)
+    vae.restore('./tmp/vae_saved.dat')
     for epoch in range(training_epochs):
         print(epoch)
         avg_cost = 0.
@@ -36,4 +37,8 @@ network_architecture = \
          n_input = 784,
          n_z = 20)
 
-vae = train(network_architecture, training_epochs=75)
+#vae = train(network_architecture, training_epochs=75)
+
+
+vae = train(network_architecture, training_epochs=5)
+print(vae.save('tmp/vae_saved.dat'))

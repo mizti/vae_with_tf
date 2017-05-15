@@ -94,6 +94,15 @@ class VariationalAutoencoder(object):
         #cost = self.sess.run(self.cost, feed_dict={self.x: X})
         #return cost
 
+    def save(self, filename):
+        saver = tf.train.Saver()
+        save_path = saver.save(self.sess, './' + filename)
+        return save_path
+
+    def restore(self, save_path):
+        saver = tf.train.Saver()
+        saver.restore(self.sess, save_path)
+
     def transform(self, X):
         return self.sess.run(self.z_mean, feed_dict={self.x: X})
 
