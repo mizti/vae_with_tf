@@ -2,3 +2,8 @@
 *.dat*
 tmp/*
 .python-version
+.ipynb_checkpoints
+*.ipynb
+log
+tensorboard.py
+untitled.*
