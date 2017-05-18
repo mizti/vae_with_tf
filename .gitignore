@@ -1,6 +1,7 @@
 *.pyc
 *.dat*
 tmp/*
+tmp2
 .python-version
 \.python-version
 .ipynb_checkpoints
