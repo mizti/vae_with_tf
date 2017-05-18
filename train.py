@@ -37,8 +37,6 @@ network_architecture = \
          n_input = 784,
          n_z = 20)
 
-#vae = train(network_architecture, training_epochs=75)
-
-
-vae = train(network_architecture, training_epochs=5)
+vae = train(network_architecture, training_epochs=75)
+#vae = train(network_architecture, training_epochs=5)
 print(vae.save('tmp/vae_saved.dat'))

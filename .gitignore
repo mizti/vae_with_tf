@@ -2,6 +2,7 @@
 *.dat*
 tmp/*
 .python-version
+\.python-version
 .ipynb_checkpoints
 *.ipynb
 log
