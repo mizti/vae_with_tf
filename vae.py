@@ -27,6 +27,7 @@ class VariationalAutoencoder(object):
         self._create_loss_optimizer()
         init = tf.global_variables_initializer()
         self.sess = tf.InteractiveSession()
+        self.saver = tf.train.Saver()
         self.sess.run(init)
 
     def _create_network(self):
@@ -94,14 +95,14 @@ class VariationalAutoencoder(object):
         #cost = self.sess.run(self.cost, feed_dict={self.x: X})
         #return cost
 
-    def save(self, filename):
-        saver = tf.train.Saver()
-        save_path = saver.save(self.sess, './' + filename)
+    def save(self, filename, global_step):
+        #saver = tf.train.Saver()
+        save_path = self.saver.save(self.sess, filename, global_step=global_step)
         return save_path
 
     def restore(self, save_path):
-        saver = tf.train.Saver()
-        saver.restore(self.sess, save_path)
+        #saver = tf.train.Saver()
+        self.saver.restore(self.sess, save_path)
 
     def transform(self, X):
         return self.sess.run(self.z_mean, feed_dict={self.x: X})

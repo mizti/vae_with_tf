@@ -39,6 +39,5 @@ network_architecture = \
 
 #vae = train(network_architecture, training_epochs=75)
 
-
 vae = train(network_architecture, training_epochs=5)
 print(vae.save('tmp/vae_saved.dat'))
