@@ -21,26 +21,45 @@ class VariationalAutoencoder(object):
         self.learning_rate = learning_rate
         self.batch_size = batch_size
 
-
         self.x = tf.placeholder(tf.float32, [None, network_architecture["n_input"]])
         self._create_network()
         self._create_loss_optimizer()
         init = tf.global_variables_initializer()
         self.sess = tf.InteractiveSession()
-        self.saver = tf.train.Saver()
+        #self.saver = tf.train.Saver()
+        self.saver = tf.train.Saver(var_list={
+            "weights_recog_h1":self.network_weights["weights_recog"]['h1'],
+            "weights_recog_h2":self.network_weights["weights_recog"]['h2'],
+            "weights_recog_out_mean":self.network_weights["weights_recog"]['out_mean'],
+            "weights_recog_out_log_sigma":self.network_weights["weights_recog"]['out_log_sigma'],
+            
+            "biases_recog_b1":self.network_weights["biases_recog"]['b1'],
+            "biases_recog_b2":self.network_weights["biases_recog"]['b2'],
+            "biases_recog_out_mean":self.network_weights["biases_recog"]['out_mean'],
+            "biases_recog_out_log_sigma":self.network_weights["biases_recog"]['out_log_sigma'],
+
+            "weights_gener_h1":self.network_weights["weights_gener"]['h1'],
+            "weights_gener_h2":self.network_weights["weights_gener"]['h2'],
+            "weights_gener_out_mean":self.network_weights["weights_gener"]['out_mean'],
+            "weights_gener_out_log_sigma":self.network_weights["weights_gener"]['out_log_sigma'],
+
+            "biases_gener_b1":self.network_weights["biases_gener"]['b1'],
+            "biases_gener_b2":self.network_weights["biases_gener"]['b2'],
+            "biases_gener_out_mean":self.network_weights["biases_gener"]['out_mean'],
+            "biases_gener_out_log_sigma":self.network_weights["biases_gener"]['out_log_sigma']
+        })
         self.sess.run(init)
 
     def _create_network(self):
-        network_weights = self._initialize_weights(**self.network_architecture)
+        self.network_weights = self._initialize_weights(**self.network_architecture)
         self.z_mean, self.z_log_sigma_sq = \
-            self._recognition_network(network_weights["weights_recog"], network_weights["biases_recog"])
+            self._recognition_network(self.network_weights["weights_recog"], self.network_weights["biases_recog"])
         n_z = self.network_architecture["n_z"]
         eps = tf.random_normal((self.batch_size, n_z), 0, 1, dtype=tf.float32)
 
         self.z = tf.add(self.z_mean, tf.multiply(tf.sqrt(tf.exp(self.z_log_sigma_sq)), eps))
         self.x_reconstr_mean = \
-            self._generator_network(network_weights["weights_gener"],network_weights["biases_gener"])
-
+            self._generator_network(self.network_weights["weights_gener"], self.network_weights["biases_gener"])
 
     def _initialize_weights(self, n_hidden_recog_1, n_hidden_recog_2, n_hidden_gener_1, n_hidden_gener_2, n_input, n_z):
         all_weights = dict()
@@ -96,12 +115,10 @@ class VariationalAutoencoder(object):
         #return cost
 
     def save(self, filename, global_step):
-        #saver = tf.train.Saver()
         save_path = self.saver.save(self.sess, filename, global_step=global_step)
         return save_path
 
     def restore(self, save_path):
-        #saver = tf.train.Saver()
         self.saver.restore(self.sess, save_path)
 
     def transform(self, X):
